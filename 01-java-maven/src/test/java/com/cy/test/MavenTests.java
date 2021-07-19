@@ -7,5 +7,6 @@ public class MavenTests {
         @Test
         public void testHello(){
             System.out.println("hello maven");
+            System.out.println("git update");
         }
 }
