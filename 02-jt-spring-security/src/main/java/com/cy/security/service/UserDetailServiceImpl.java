@@ -36,5 +36,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_jinpai,ROLE_tongpai,sys:res:retrieve,sys:res:create");
         User user = new User(username, encodedPwd, grantedAuthorities);
         return user;
+
     }
 }
