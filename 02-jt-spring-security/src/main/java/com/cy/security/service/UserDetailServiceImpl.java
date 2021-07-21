@@ -28,14 +28,17 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //基于用户名从数据库的信息
         //User user = userMapper.selectUserByName(username);
-        if(!"jack".equals(username))
+        if(!"jack".equals(username))//假设这是从数据库查询的信息
             throw new UsernameNotFoundException("user not exists");
         //2. 将用户信息封装到UserDetails对象中返回
         //假设这个密码也是从数据库查询到的
         String encodedPwd = passwordEncoder.encode("123456");
+        //假设这个权限信息也是从数据库查询到的
+        //假如分配权限的方式是角色,编写字符串时用"ROLE_"做前缀
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_jinpai,ROLE_tongpai,sys:res:retrieve,sys:res:create");
+        //这个user是SpringSecurity提供的UserDetails接口的实现,用于封装用户信息
+        //后续我们也可以基于需要自己构建UserDetails接口的实现
         User user = new User(username, encodedPwd, grantedAuthorities);
-        return user;
-
+        return user;//这里的返回值会交给springsecurity去校验
     }
 }
