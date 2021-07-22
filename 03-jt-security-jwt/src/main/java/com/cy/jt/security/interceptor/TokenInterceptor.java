@@ -16,6 +16,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             throw new RuntimeException("please login");
         if(JwtUtils.isTokenExpired(token))
             throw new RuntimeException("login timeout,please login");
+
         return true;
     }
 }
