@@ -1,5 +1,7 @@
 package com.cy.security.config;
 
+import com.cy.security.config.handler.DefaultAccessDeniedExceptionHandler;
+import com.cy.security.config.handler.DefaultAuthenticationEntryPoint;
 import com.cy.security.config.handler.DefaultAuthenticationFailureHandler;
 import com.cy.security.config.handler.JsonAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
@@ -39,11 +41,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //.successHandler(new RedirectAuthenticationSuccessHandler("http://www.tedu.cn"))
             //.failureHandler(new DefaultAuthenticationFailureHandler())
             //.failureUrl()
-            .and()
+            .and()//完成上部分配置,开始另一配置
             .logout()
             .logoutUrl("/logout")
             .logoutSuccessUrl("/logout.html?logout")
             ;
+        //设置需要认证与拒绝访问的异常处理器
+        http.exceptionHandling()
+                .accessDeniedHandler(
+                        new DefaultAccessDeniedExceptionHandler());
+        //设置需要登录后访问的异常处理器
+        http.exceptionHandling()
+                .authenticationEntryPoint(
+                        new DefaultAuthenticationEntryPoint());
         //3.放行登录url(不需要认证就可以访问)
         http.authorizeRequests()
             .antMatchers(//配置下列路径的授权
