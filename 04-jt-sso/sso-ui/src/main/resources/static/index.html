@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="appIndex">
+<h1>Index Page <a href="#"  @click="doLogout()">Logout</a></h1>
+<h2>CRUD(Create,Retrieve,Update,Delete) Operation</h2>
+<ul>
+    <li><a href="#" @click="doCreate()">Create(添加-insert)</a></li>
+    <li><a href="#">Retrieve(查询-select)</a></li>
+    <li><a href="#" @click="doUpdate()">Update(更新-update)</a></li>
+    <li><a href="#">Delete(删除-delete)</a></li>
+</ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    let vm=new Vue({
+        el:"#appIndex",//定义监控点，vue底层会基于此监控点在内存中构建dom树
+        methods: {//此位置定义所有业务事件处理函数
+            doCreate() {
+                //1.定义url
+                let url = "http://localhost:8091/doCreate"
+                //3.发送异步请求
+                axios.get(url,{headers:{"token":localStorage.getItem("token")}}).then((response) => {
+                   alert(response.data)
+                })
+            },
+            doUpdate() {
+                //1.定义url
+                let url = "http://localhost:8091/doUpdate"
+                //3.发送异步请求
+                axios.get(url,{headers:{"token":localStorage.getItem("token")}}).then((response) => {
+                    alert(response.data.message);
+                })
+            },
+            doLogout() {
+                localStorage.removeItem('roken');
+                location.href="/login.html";
+            },
+        }
+    });
+</script>
+</body>
+</html>

@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sso.dao.UserMapper;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -18,6 +20,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserMapper userMapper;
 
     /**
      * 当我们执行登录操作的时,底层会通过过滤器等对象,调用这个方法
@@ -27,15 +32,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //2. 将用户信息封装到UserDetails对象中返回
-        //假设这个密码也是从数据库查询到的
-        String encodedPwd = passwordEncoder.encode("123456");
-        //假设这个权限信息也是从数据库查询到的
-        //假如分配权限的方式是角色,编写字符串时用"ROLE_"做前缀
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("sys:res:retrieve,sys:res:create");
+        //1.基于用户名查询用户信息
+        Map<String, Object> userMap = userMapper.selectUserByUsername(username);
+        if(userMap == null) throw new UsernameNotFoundException("user not exists");
+        //2.查询用户权限信息并封装查询结果
+        String password=passwordEncoder.encode("123456");
+        System.out.println("password="+password);
+        List<String> userPermissions = userMapper.selectUserPermissions((Long) userMap.get("id"));
         //这个user是SpringSecurity提供的UserDetails接口的实现,用于封装用户信息
         //后续我们也可以基于需要自己构建UserDetails接口的实现
-        User user = new User(username, encodedPwd, grantedAuthorities);
-        return user;//这里的返回值会交给springsecurity去校验
+        return new User(username,(String) userMap.get("password"), AuthorityUtils.createAuthorityList(userPermissions.toArray(new String[]{})));//这里的返回值会交给springsecurity去校验
     }
 }

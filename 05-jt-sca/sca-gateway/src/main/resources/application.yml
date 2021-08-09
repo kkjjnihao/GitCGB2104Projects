@@ -1,0 +1,23 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: sca-gateway
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8180 #Sentinel 控制台地址
+        port: 8719 #客户端监控API的端口
+      eager: true  #取消Sentinel控制台懒加载,即项目启动即连接
+    nacos:
+      discovery: #服务的注册和发现
+        server-addr: localhost:8848
+    gateway:
+      routes: #配置网关路由规则
+        - id: route01 #路由id自己指定一个唯一值即可
+          #uri: http://localhost:8081/
+          uri: lb://sca-provider
+          predicates: ###断言(谓此):匹配请求规则
+            - Path=/nacos/provider/echo/** #请求路径定义
+          filters: #网关过滤器,用于对谓词中的内容进行判断分析以及处理
+            - StripPrefix=1 #转发之前去掉path中第一层路径，例如nacos

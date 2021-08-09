@@ -1,0 +1,17 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: sca-consumer #服务名,后续会在注册中心呈现这个名字
+  cloud:
+    nacos:
+      discovery: #服务的注册和发现
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8180
+      eager: true
+feign:
+  hystrix:
+    enabled: true

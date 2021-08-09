@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: jt-sso-resource
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+logging:
+  level:
+    com.jt: debug
+feign:  #启用feign方式服务调用时的异常处理机制
+  hystrix:
+    enabled: true #默认值为false

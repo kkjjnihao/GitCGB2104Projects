@@ -1,0 +1,25 @@
+server:
+  port: 8081
+  tomcat:
+    threads:
+      max: 1
+      min-spare: 1
+spring:
+  application:
+    name: sca-provider #服务名,后续会在注册中心呈现这个名字
+  cloud:
+    nacos:
+      discovery: #服务的注册和发现
+        server-addr: localhost:8848
+      config: #服务的配置
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: b1f6f9ce-1852-4bf7-b71c-875e931609d2 #不写默认是public
+        group: DEV_GROUP_51
+        shared-configs[0]:
+          data-id: app-public-dev.yml
+          group: DEV_GROUP_51
+          refresh: true
+logging:
+  level:
+    com.cy: debug
